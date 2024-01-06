@@ -1,0 +1,51 @@
+//Definiendo generales
+const randomId = () => self.crypto.randomUUID();
+const $ = (selector) => document.getElementById(selector);
+const $$ = (selector) => document.querySelectorAll(selector);
+
+const inicializar = () => {
+    if (!traer("categorias")) {
+        localStorage.setItem("categorias", JSON.stringify(categorias));
+    }
+    mostrarOperaciones(operaciones);
+    actualizarBalance(operaciones);
+    crearLista(categorias);
+    mostrarOpciones(categorias);
+    cargarFechas();
+    ordenarYBalance();
+    vistaReportes(operaciones);
+    actualizarReportes(operaciones);
+};
+
+const actualizarReportes = (operaciones) => {
+    mayorGananciaPorCategorias(operaciones);
+    mayorGastosPorCategorias(operaciones);
+    categoriaMayorBalance(operaciones);
+    mesMayorGanancia(operaciones);
+    mesMayorGasto(operaciones);
+    totalesPorCategoria(operaciones);
+    totalesPorMes(operaciones);
+};
+
+//Definiendo fecha actual
+const cargarFechas = () => {
+    let fechaHoy = new Date();
+    let mes = fechaHoy.getMonth() + 1;
+    let dia = fechaHoy.getDate();
+    let anio = fechaHoy.getFullYear();
+    if (dia < 10) dia = "0" + dia;
+    if (mes < 10) mes = "0" + mes;
+    $("fecha-nueva-op").value = anio + "-" + mes + "-" + dia;
+    $("fecha-filtro").value = anio + "-" + mes + "-" + dia;
+};
+
+const traer = (clave) => {
+    return JSON.parse(localStorage.getItem(`${clave}`));
+};
+
+//Para definir datos a nivel local
+const actualizarInfo = (clave, datos) => {
+    localStorage.setItem(`${clave}`, JSON.stringify(datos));
+};
+
+let operaciones = traer("operaciones") || [];
