@@ -315,3 +315,101 @@ let categorias = traer("categorias") || [
     },
 ];
 
+//------Crear lista Categorias
+
+const crearLista = (listaDeCategorias) => {
+    $("lista-categorias").innerHTML = "";
+    for (let { nombre, id } of listaDeCategorias) {
+        $("lista-categorias").innerHTML += `
+        <li class="is-flex is-justify-content-space-between">
+            <span class="tag is-primary is-light mb-5">${nombre}</span>
+        <div class="has-text-right">
+            <button onclick="mostrarEditarCategoria('${id}')" id="${id}" class="button is-ghost is-size-7 mr-4 editarBtn">Editar</button>
+            <button onclick="eliminarCategoria('${id}')" id="${id}" class="button is-ghost is-size-7 eliminarBtn">Eliminar</button>
+        </div>
+        </li>`;
+    }
+};
+
+//----Mostrar opciones del select
+const mostrarOpciones = (categorias) => {
+    $$(".select-categorias").forEach((select) => {
+        select.innerHTML = "";
+        if (select.id === "filtro-categoria") {
+            select.innerHTML += `<option value="Todas">Todas</option>`;
+        }
+        for (let { id, nombre } of categorias) {
+            select.innerHTML += `<option value="${id}">${nombre}</option>`;
+        }
+    });
+};
+
+//-----Agregar nueva Categoria
+
+const agregarCategoria = () => {
+    let nuevoObj = {
+        id: randomId(),
+        nombre: $("input-nueva-categoria").value,
+    };
+    categorias = [...categorias, nuevoObj];
+    crearLista(categorias);
+    mostrarOpciones(categorias);
+    actualizarInfo("categorias", categorias);
+};
+
+$("boton-agregar-categoria").addEventListener("click", agregarCategoria);
+
+//----Obtener categoria
+const obtenerCategoria = (idCategoria, categorias) => {
+    return traer("categorias").find(
+        (categoria) => categoria.id === idCategoria
+    );
+};
+
+//----Mostrar vista editar categoria
+const mostrarEditarCategoria = (id) => {
+    $("container-categorias").classList.add("is-hidden");
+    $("editar-categoria").classList.remove("is-hidden");
+    let categoriaAEditar = obtenerCategoria(id, categorias);
+    $("input-editar").value = categoriaAEditar.nombre;
+    $("boton-editar").onclick = () => editarCategoria(categoriaAEditar.id);
+    ocultarEditarCategoria();
+};
+
+const ocultarEditarCategoria = () => {
+    $("boton-cancelar").addEventListener("click", () => {
+        $("container-categorias").classList.remove("is-hidden");
+        $("editar-categoria").classList.add("is-hidden");
+    });
+};
+
+const editarCategoria = (id) => {
+    let nuevaCategoria = {
+        id: id,
+        nombre: $("input-editar").value,
+    };
+    let categoriasActualizadas = traer("categorias").map((categoria) =>
+        categoria.id === id ? { ...nuevaCategoria } : categoria
+    );
+    crearLista(categoriasActualizadas);
+    mostrarOpciones(categoriasActualizadas);
+    $("container-categorias").classList.remove("is-hidden");
+    $("editar-categoria").classList.add("is-hidden");
+    actualizarInfo("categorias", categoriasActualizadas);
+};
+
+const eliminarCategoria = (id) => {
+    categorias = traer("categorias").filter((categoria) => categoria.id !== id);
+    crearLista(categorias);
+    mostrarOpciones(categorias);
+    operacionesCategoriaEliminada(id);
+    actualizarInfo("categorias", categorias);
+};
+
+const operacionesCategoriaEliminada = (id) => {
+    operaciones = traer("operaciones").filter(
+        (operacion) => operacion.categoria !== id
+    );
+    actualizarInfo("operaciones", operaciones);
+    ordenarYBalance();
+};
