@@ -79,3 +79,9 @@ $("burger").addEventListener("click", () => {
     $("navbarLinks").classList.toggle("is-active");
 });
 
+// SECCION BALANCE
+
+//Ocultar filtros
+$("ocultar-filtros").addEventListener("click", () => {
+    $("filtros").classList.toggle("is-hidden");
+});
