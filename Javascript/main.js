@@ -1,4 +1,4 @@
-//Definiendo generales
+//selectores
 const randomId = () => self.crypto.randomUUID();
 const $ = (selector) => document.getElementById(selector);
 const $$ = (selector) => document.querySelectorAll(selector);
@@ -27,7 +27,7 @@ const actualizarReportes = (operaciones) => {
     totalesPorMes(operaciones);
 };
 
-//Definiendo fecha actual
+//fecha actual
 const cargarFechas = () => {
     let fechaHoy = new Date();
     let mes = fechaHoy.getMonth() + 1;
@@ -43,16 +43,15 @@ const traer = (clave) => {
     return JSON.parse(localStorage.getItem(`${clave}`));
 };
 
-//Para definir datos a nivel local
+//datos a nivel local
 const actualizarInfo = (clave, datos) => {
     localStorage.setItem(`${clave}`, JSON.stringify(datos));
 };
 
 let operaciones = traer("operaciones") || [];
 
-// *****************
-// NAVBAR
-// ***************
+
+// Navbar
 //Cambio de seccion
 
 const mostrarVista = (vistaAMostrar) => {
@@ -82,16 +81,13 @@ $("burger").addEventListener("click", () => {
     $("navbarLinks").classList.toggle("is-active");
 });
 
-// -----------------------
-// SECCION BALANCE
-// ----------------------
-
+//Seccion Balance
 //Ocultar filtros
 $("ocultar-filtros").addEventListener("click", () => {
     $("filtros").classList.toggle("is-hidden");
 });
 
-//Abre card de nueva operacion
+//ventana de nueva operacion
 const abrirNuevaOperacion = () => {
     $("seccion-balance").classList.add("is-hidden");
     $("nueva-operacion").classList.remove("is-hidden");
@@ -99,7 +95,7 @@ const abrirNuevaOperacion = () => {
 
 $("nueva-operacion-btn").addEventListener("click", () => abrirNuevaOperacion());
 
-//-----Funcionabilidad
+//Funcionabilidad
 const actualizarBalance = (operaciones) => {
     let ganancias = 0;
     let gastos = 0;
@@ -131,9 +127,7 @@ const actualizarBalance = (operaciones) => {
     $("balance-gastos").innerHTML = `-$${gastos}`;
 };
 
-// ---------------------Nueva Operacion---------------------
-
-//Objeto operacion armado para luego pushearlo al array
+//Nueva Operacion
 const agregarOperacion = () => {
     const operacion = {
         id: randomId(),
@@ -269,7 +263,7 @@ const mostrarOperaciones = (listaOperaciones) => {
     noHayOperaciones();
 };
 
-//Definiendo como se muestra el mondo
+//como se muestra el monto
 const tipoMonto = (monto, tipo) => {
     return tipo === "Gasto" ? `-$${monto}` : `+$${monto}`;
 };
@@ -278,7 +272,7 @@ const colorMonto = (tipo) => {
     return tipo === "Gasto" ? "has-text-danger" : "has-text-success";
 };
 
-//para cuando no hay operaciones mostrar ilustracion
+//cuando no hay operaciones
 const noHayOperaciones = () => {
     if ($("operaciones").innerHTML === "") {
         $("ver-operaciones").classList.add("is-hidden");
@@ -291,8 +285,7 @@ const noHayOperaciones = () => {
     }
 };
 
-// ------------Funcionabilidad Categorias------------------
-
+//Funcionabilidad Categorias
 let categorias = traer("categorias") || [
     {
         id: randomId(),
@@ -320,8 +313,7 @@ let categorias = traer("categorias") || [
     },
 ];
 
-//------Crear lista Categorias
-
+//lista Categorias
 const crearLista = (listaDeCategorias) => {
     $("lista-categorias").innerHTML = "";
     for (let { nombre, id } of listaDeCategorias) {
@@ -336,7 +328,7 @@ const crearLista = (listaDeCategorias) => {
     }
 };
 
-//----Mostrar opciones del select
+//opciones del select
 const mostrarOpciones = (categorias) => {
     $$(".select-categorias").forEach((select) => {
         select.innerHTML = "";
@@ -349,8 +341,7 @@ const mostrarOpciones = (categorias) => {
     });
 };
 
-//-----Agregar nueva Categoria
-
+//Nueva Categoria
 const agregarCategoria = () => {
     let nuevoObj = {
         id: randomId(),
@@ -364,14 +355,14 @@ const agregarCategoria = () => {
 
 $("boton-agregar-categoria").addEventListener("click", agregarCategoria);
 
-//----Obtener categoria
+//Obtener categoria
 const obtenerCategoria = (idCategoria, categorias) => {
     return traer("categorias").find(
         (categoria) => categoria.id === idCategoria
     );
 };
 
-//----Mostrar vista editar categoria
+//Vista editar categoria
 const mostrarEditarCategoria = (id) => {
     $("container-categorias").classList.add("is-hidden");
     $("editar-categoria").classList.remove("is-hidden");
@@ -419,8 +410,8 @@ const operacionesCategoriaEliminada = (id) => {
     ordenarYBalance();
 };
 
-//------------------------FILTROS ----------------------
-//Segun TIPO
+//Filtros
+//Segun tipo
 const filtroGastoGanancia = (operaciones) => {
     if ($("filtro-tipo").value !== "Todos") {
         let operacionesAMostrar = operaciones.filter(
@@ -429,6 +420,63 @@ const filtroGastoGanancia = (operaciones) => {
         return operacionesAMostrar;
     } else {
         return operaciones;
+    }
+};
+
+//Ordenar por
+const filtroOrdenar = (operaciones) => {
+    switch ($("filtro-ordenar").value) {
+        case ($("filtro-ordenar").value = "A/Z"):
+            operaciones = operaciones.sort((a, b) => {
+                return a.descripcion.localeCompare(b.descripcion, {
+                    ignorePunctuation: true,
+                });
+            });
+            return operaciones;
+            break;
+        case ($("filtro-ordenar").value = "Z/A"):
+            operaciones = operaciones
+                .sort((a, b) => {
+                    return a.descripcion.localeCompare(b.descripcion, {
+                        ignorePunctuation: true,
+                    });
+                })
+                .reverse();
+            return operaciones;
+            break;
+        case ($("filtro-ordenar").value = "Mayor monto"):
+            operaciones = operaciones
+                .sort((a, b) => {
+                    return a.monto - b.monto;
+                })
+                .reverse();
+            return operaciones;
+            break;
+        case ($("filtro-ordenar").value = "Menor monto"):
+            operaciones = operaciones.sort((a, b) => {
+                return a.monto - b.monto;
+            });
+            return operaciones;
+            break;
+        case ($("filtro-ordenar").value = "Menos reciente"):
+            operaciones = operaciones.sort((a, b) => {
+                return (
+                    new Date(a.fecha).getTime() - new Date(b.fecha).getTime()
+                );
+            });
+            return operaciones;
+            break;
+        case ($("filtro-ordenar").value = "Mas reciente"):
+            operaciones = operaciones
+                .sort((a, b) => {
+                    return (
+                        new Date(a.fecha).getTime() -
+                        new Date(b.fecha).getTime()
+                    );
+                })
+                .reverse();
+            return operaciones;
+            break;
     }
 };
 
