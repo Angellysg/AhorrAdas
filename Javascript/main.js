@@ -49,3 +49,26 @@ const actualizarInfo = (clave, datos) => {
 };
 
 let operaciones = traer("operaciones") || [];
+
+//Navbar
+
+const mostrarVista = (vistaAMostrar) => {
+    $$(".vista").forEach((vista) => {
+        vista.classList.add("is-hidden");
+        $(`${vistaAMostrar}`).classList.remove("is-hidden");
+    });
+};
+
+$("navbar-balance").addEventListener("click", () =>
+    mostrarVista("seccion-balance")
+);
+$("navbar-categorias").addEventListener("click", () =>
+    mostrarVista("seccion-categorias")
+);
+$("nueva-operacion-btn").addEventListener("click", () =>
+    mostrarVista("nueva-operacion")
+);
+$("navbar-reportes").addEventListener("click", () =>
+    mostrarVista("seccion-reportes")
+);
+
