@@ -285,3 +285,33 @@ const noHayOperaciones = () => {
         $("sin-operaciones").classList.add("is-hidden");
     }
 };
+
+// ------------Funcionabilidad Categorias------------------
+
+let categorias = traer("categorias") || [
+    {
+        id: randomId(),
+        nombre: "Comida",
+    },
+    {
+        id: randomId(),
+        nombre: "Servicios",
+    },
+    {
+        id: randomId(),
+        nombre: "Salidas",
+    },
+    {
+        id: randomId(),
+        nombre: "Educación",
+    },
+    {
+        id: randomId(),
+        nombre: "Transporte",
+    },
+    {
+        id: randomId(),
+        nombre: "Trabajo",
+    },
+];
+
