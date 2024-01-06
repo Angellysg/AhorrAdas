@@ -85,3 +85,11 @@ $("burger").addEventListener("click", () => {
 $("ocultar-filtros").addEventListener("click", () => {
     $("filtros").classList.toggle("is-hidden");
 });
+
+//Abre card de nueva operacion
+const abrirNuevaOperacion = () => {
+    $("seccion-balance").classList.add("is-hidden");
+    $("nueva-operacion").classList.remove("is-hidden");
+};
+
+$("nueva-operacion-btn").addEventListener("click", () => abrirNuevaOperacion());
