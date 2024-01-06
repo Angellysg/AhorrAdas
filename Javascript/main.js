@@ -72,3 +72,10 @@ $("navbar-reportes").addEventListener("click", () =>
     mostrarVista("seccion-reportes")
 );
 
+//Menu hamburguesa
+
+$("burger").addEventListener("click", () => {
+    $("burger").classList.toggle("is-active");
+    $("navbarLinks").classList.toggle("is-active");
+});
+
