@@ -93,3 +93,36 @@ const abrirNuevaOperacion = () => {
 };
 
 $("nueva-operacion-btn").addEventListener("click", () => abrirNuevaOperacion());
+
+//-----Funcionabilidad
+const actualizarBalance = (operaciones) => {
+    let ganancias = 0;
+    let gastos = 0;
+
+    operaciones.forEach((operacion) => {
+        if (operacion.tipo === "Ganancia") {
+            ganancias += Number(operacion.monto);
+        } else if (operacion.tipo === "Gasto") {
+            gastos += Number(operacion.monto);
+        }
+    });
+
+    const balance = ganancias - gastos;
+
+    if (balance > 0) {
+        $("balance-total").classList.add("has-text-success");
+        $("balance-total").classList.remove("has-text-danger");
+        $("balance-total").innerHTML = `+$${balance}`;
+    } else if (balance < 0) {
+        $("balance-total").classList.add("has-text-danger");
+        $("balance-total").classList.remove("has-text-success");
+        $("balance-total").innerHTML = `$${balance}`;
+    } else {
+        $("balance-total").classList.remove("has-text-success", "has-text-danger");
+        $("balance-total").innerHTML = `$${balance}`;
+    }
+
+    $("balance-ganancias").innerHTML = `+$${ganancias}`;
+    $("balance-gastos").innerHTML = `-$${gastos}`;
+};
+
