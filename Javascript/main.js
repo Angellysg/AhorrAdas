@@ -50,7 +50,10 @@ const actualizarInfo = (clave, datos) => {
 
 let operaciones = traer("operaciones") || [];
 
-//Navbar
+// *****************
+// NAVBAR
+// ***************
+//Cambio de seccion
 
 const mostrarVista = (vistaAMostrar) => {
     $$(".vista").forEach((vista) => {
@@ -79,7 +82,9 @@ $("burger").addEventListener("click", () => {
     $("navbarLinks").classList.toggle("is-active");
 });
 
+// -----------------------
 // SECCION BALANCE
+// ----------------------
 
 //Ocultar filtros
 $("ocultar-filtros").addEventListener("click", () => {
@@ -413,3 +418,17 @@ const operacionesCategoriaEliminada = (id) => {
     actualizarInfo("operaciones", operaciones);
     ordenarYBalance();
 };
+
+//------------------------FILTROS ----------------------
+//Segun TIPO
+const filtroGastoGanancia = (operaciones) => {
+    if ($("filtro-tipo").value !== "Todos") {
+        let operacionesAMostrar = operaciones.filter(
+            (operacion) => operacion.tipo === $("filtro-tipo").value
+        );
+        return operacionesAMostrar;
+    } else {
+        return operaciones;
+    }
+};
+
