@@ -285,6 +285,7 @@ const noHayOperaciones = () => {
     }
 };
 
+//Seccion Categorias
 //Funcionabilidad Categorias
 let categorias = traer("categorias") || [
     {
@@ -522,3 +523,34 @@ $("filtro-tipo").addEventListener("change", () => ordenarYBalance());
 $("filtro-ordenar").addEventListener("change", () => ordenarYBalance());
 
 
+//Seccion Reportes
+//Mayor ganancia por categoria
+const mayorGananciaPorCategorias = (operaciones) => {
+    if (operaciones.length === 0) {
+        return;
+    }
+
+    let categoriaConMayorGanancia = "";
+    let montoMayorGanancia = 0;
+    for (let { nombre, id } of categorias) {
+        let operacionesPorCategoria = operaciones.filter(
+            (operacion) => operacion.categoria === id
+        );
+        let gananciasPorCategoria = operacionesPorCategoria.filter(
+            (operacion) => operacion.tipo !== "Gasto"
+        );
+        let totalGanancias = gananciasPorCategoria.reduce(
+            (acum, ganancia) => acum + Number(ganancia.monto),
+            0
+        );
+        if (categoriaConMayorGanancia === "" && montoMayorGanancia === 0) {
+            categoriaConMayorGanancia = nombre;
+            montoMayorGanancia = totalGanancias;
+        } else if (totalGanancias > montoMayorGanancia) {
+            categoriaConMayorGanancia = nombre;
+            montoMayorGanancia = totalGanancias;
+        }
+    }
+    $("categoria-mayor-ganancia").innerHTML = `${categoriaConMayorGanancia}`;
+    $("monto-mayor-ganancia").innerHTML = `+$${montoMayorGanancia}`;
+};
