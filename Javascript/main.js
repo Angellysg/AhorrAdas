@@ -480,3 +480,15 @@ const filtroOrdenar = (operaciones) => {
     }
 };
 
+//Por categoria 
+const filtroCategoria = (operaciones) => {
+    if ($("filtro-categoria").value !== "Todas") {
+        let operacionesAMostrar = operaciones.filter(
+            (operacion) => operacion.categoria === $("filtro-categoria").value
+        );
+        return operacionesAMostrar;
+    } else {
+        return operaciones;
+    }
+};
+
