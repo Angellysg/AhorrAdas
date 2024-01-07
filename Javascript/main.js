@@ -492,3 +492,12 @@ const filtroCategoria = (operaciones) => {
     }
 };
 
+//Por fecha
+const filtroDesdeFecha = (operaciones) => {
+    return operaciones.filter(
+        (operacion) =>
+            new Date(operacion.fecha) >= new Date($("fecha-filtro").value)
+    );
+};
+
+
