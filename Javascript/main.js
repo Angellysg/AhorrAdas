@@ -500,4 +500,25 @@ const filtroDesdeFecha = (operaciones) => {
     );
 };
 
+const ordenarOperaciones = () => {
+    let operacionesSegunGasto = filtroGastoGanancia(traer("operaciones"));
+    let operacionesSegunCategoria = filtroCategoria(operacionesSegunGasto);
+    let operacionesSegunFecha = filtroDesdeFecha(operacionesSegunCategoria);
+    return filtroOrdenar(operacionesSegunFecha);
+};
+
+const ordenarYBalance = () => {
+    let operacionesOrdenadas = ordenarOperaciones();
+    actualizarBalance(operacionesOrdenadas);
+    mostrarOperaciones(operacionesOrdenadas);
+};
+
+$("fecha-filtro").addEventListener("change", () => ordenarYBalance());
+
+$("filtro-categoria").addEventListener("change", () => ordenarYBalance());
+
+$("filtro-tipo").addEventListener("change", () => ordenarYBalance());
+
+$("filtro-ordenar").addEventListener("change", () => ordenarYBalance());
+
 
