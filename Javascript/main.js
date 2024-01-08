@@ -623,3 +623,84 @@ const categoriaMayorBalance = (operaciones) => {
     $("monto-mayor-balance").innerHTML = `$${mayorBalance}`;
 };
 
+//Mes con mayor ganancia
+const mesMayorGanancia = (operaciones) => {
+    if (operaciones.length === 0) {
+        return;
+    }
+
+    let mesMayorGanancia = "";
+    let montoMayorGanancia = 0;
+
+    const gananciasPorMes = {};
+
+    operaciones.forEach((operacion) => {
+        if (operacion.tipo !== "Gasto") {
+            const fecha = new Date(operacion.fecha);
+            const mesAnio = `${fecha.getMonth() + 1}/${fecha.getFullYear()}`;
+            const monto = Number(operacion.monto);
+
+            if (!gananciasPorMes[mesAnio]) {
+                gananciasPorMes[mesAnio] = monto;
+            } else {
+                gananciasPorMes[mesAnio] += monto;
+            }
+
+            if (gananciasPorMes[mesAnio] > montoMayorGanancia) {
+                montoMayorGanancia = gananciasPorMes[mesAnio];
+                mesMayorGanancia = mesAnio;
+            }
+        }
+    });
+
+    if (mesMayorGanancia !== "") {
+        const [mes, anio] = mesMayorGanancia.split("/");
+
+        $("mes-mayor-ganancia").innerHTML = `${mes}/${anio}`;
+        $("monto-mes-mayor-ganancia").innerHTML = `+$${montoMayorGanancia}`;
+    } else {
+        $("mes-mayor-ganancia").innerHTML = "N/A";
+        $("monto-mes-mayor-ganancia").innerHTML = "N/A";
+    }
+};
+
+const mesMayorGasto = (operaciones) => {
+    if (operaciones.length === 0) {
+        return;
+    }
+
+    let mesMayorGasto = "";
+    let montoMayorGasto = 0;
+
+    const gastosPorMes = {};
+
+    operaciones.forEach((operacion) => {
+        if (operacion.tipo === "Gasto") {
+            const fecha = new Date(operacion.fecha);
+            const mesAnio = `${fecha.getMonth() + 1}/${fecha.getFullYear()}`;
+            const monto = Number(operacion.monto);
+
+            if (!gastosPorMes[mesAnio]) {
+                gastosPorMes[mesAnio] = monto;
+            } else {
+                gastosPorMes[mesAnio] += monto;
+            }
+
+            if (gastosPorMes[mesAnio] > montoMayorGasto) {
+                montoMayorGasto = gastosPorMes[mesAnio];
+                mesMayorGasto = mesAnio;
+            }
+        }
+    });
+
+    if (mesMayorGasto !== "") {
+        const [mes, anio] = mesMayorGasto.split("/");
+
+        $("mes-mayor-gasto").innerHTML = `${mes}/${anio}`;
+        $("monto-mes-mayor-gasto").innerHTML = `-$${montoMayorGasto}`;
+    } else {
+        $("mes-mayor-gasto").innerHTML = "N/A";
+        $("monto-mes-mayor-gasto").innerHTML = "N/A";
+    }
+};
+
