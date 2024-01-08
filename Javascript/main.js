@@ -766,3 +766,68 @@ const totalesPorCategoria = (operaciones) => {
     }
 };
 
+//Totales por mes
+const totalesPorMes = (operaciones) => {
+    const totalesPorMes = {};
+    $("totales-por-mes").innerHTML = ""
+    operaciones.forEach(({ tipo, fecha, monto }) => {
+        const mes = new Date(fecha).getMonth() + 1;
+        const anio = new Date(fecha).getFullYear();
+        const key = `${mes}/${anio}`;
+
+        if (!totalesPorMes[key]) {
+            totalesPorMes[key] = { ganancias: 0, gastos: 0 };
+        }
+
+        if (tipo === "Gasto") {
+            totalesPorMes[key].gastos += Number(monto);
+        } else if (tipo !== "Gasto") {
+            totalesPorMes[key].ganancias += Number(monto);
+        }
+    });
+    for (const key in totalesPorMes) {
+        const { ganancias, gastos } = totalesPorMes[key];
+        const [mes, anio] = key.split("/");
+        const balance = ganancias - gastos;
+        $("totales-por-mes").innerHTML += `
+        
+        <div class="columns is-mobile">
+            <div class="column">
+                <p class="has-text-weight-semibold">${mes}/${anio}</p>
+            </div>
+            <div class="column">
+                <p class="has-text-success">+$${ganancias}</p>
+            </div>
+            <div class="column">
+                <p class="has-text-danger">-$${gastos}</p>
+            </div>
+            <div class="column">
+                <p>$${balance}</p>
+            </div>
+        </div>`;
+    }
+};
+
+const vistaReportes = (operaciones) => {
+    let tieneGasto = false;
+    let tieneGanancia = false;
+
+    operaciones.forEach((operacion) => {
+        if (operacion.tipo === "Gasto") {
+            tieneGasto = true;
+        } else if (operacion.tipo === "Ganancia") {
+            tieneGanancia = true;
+        }
+    });
+
+    if (tieneGasto && tieneGanancia) {
+        $("hay-reportes").classList.remove("is-hidden");
+        $("sin-reportes").classList.add("is-hidden");
+    } else {
+        $("hay-reportes").classList.add("is-hidden");
+        $("sin-reportes").classList.remove("is-hidden");
+    }
+};
+
+window.onload = inicializar();
+
