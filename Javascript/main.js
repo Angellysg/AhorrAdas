@@ -704,3 +704,65 @@ const mesMayorGasto = (operaciones) => {
     }
 };
 
+//Totales por categorias
+const totalesPorCategoria = (operaciones) => {
+    $("totales-categorias").innerHTML = ""
+    for (let { nombre, id } of categorias) {
+        let operacionesPorCategoria = operaciones.filter(
+            (operacion) => operacion.categoria === id
+        );
+        let gananciasPorCategoria = operacionesPorCategoria.filter(
+            (operacion) => operacion.tipo !== "Gasto"
+        );
+        let totalGanancias = gananciasPorCategoria.reduce(
+            (acum, ganancia) => acum + Number(ganancia.monto),
+            0
+        );
+        let gastosPorCategoria = operacionesPorCategoria.filter(
+            (operacion) => operacion.tipo === "Gasto"
+        );
+        let totalGastos = gastosPorCategoria.reduce(
+            (acum, gasto) => acum + Number(gasto.monto),
+            0
+        );
+        let balance = totalGanancias - totalGastos;
+        if (balance === 0) {
+            $("totales-categorias").innerHTML += "";
+        } else if (totalGastos === 0) {
+            $("totales-categorias").innerHTML += `
+        <div class="columns is-mobile">
+            <div class="column has-text-weight-semibold">
+                <p>${nombre}</p>
+            </div>
+            <div class="column">
+                <p class="has-text-success">+$${totalGanancias}</p>
+            </div>
+            <div class="column">
+            <p class="has-text-danger">-$0</p>
+            </div>
+            <div class="column">
+                <p>$${balance}</p>
+            </div>
+        </div>
+    `;
+        } else if (totalGanancias === 0) {
+            $("totales-categorias").innerHTML += `
+        <div class="columns is-mobile">
+            <div class="column has-text-weight-semibold">
+                <p>${nombre}</p>
+            </div>
+            <div class="column">
+            <p class="has-text-success">+$0</p>
+            </div>
+            <div class="column">
+                <p class="has-text-danger">-$${totalGastos}</p>
+            </div>
+            <div class="column">
+                <p>$${balance}</p>
+            </div>
+        </div>
+    `;
+        }
+    }
+};
+
