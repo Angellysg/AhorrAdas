@@ -554,3 +554,35 @@ const mayorGananciaPorCategorias = (operaciones) => {
     $("categoria-mayor-ganancia").innerHTML = `${categoriaConMayorGanancia}`;
     $("monto-mayor-ganancia").innerHTML = `+$${montoMayorGanancia}`;
 };
+
+// Mayor gasto por categoria
+const mayorGastosPorCategorias = (operaciones) => {
+    if (operaciones.length === 0) {
+        return;
+    }
+
+    let categoriaConMayorGasto = "";
+    let montoMayorGasto = 0;
+    for (let { nombre, id } of categorias) {
+        let operacionesPorCategoria = operaciones.filter(
+            (operacion) => operacion.categoria === id
+        );
+        let gastosPorCategoria = operacionesPorCategoria.filter(
+            (operacion) => operacion.tipo === "Gasto"
+        );
+        let totalGastos = gastosPorCategoria.reduce(
+            (acum, gasto) => acum + Number(gasto.monto),
+            0
+        );
+        if (categoriaConMayorGasto === "" && montoMayorGasto === 0) {
+            categoriaConMayorGasto = nombre;
+            montoMayorGasto = totalGastos;
+        } else if (totalGastos > montoMayorGasto) {
+            categoriaConMayorGasto = nombre;
+            montoMayorGasto = totalGastos;
+        }
+    }
+    $("categoria-mayor-gasto").innerHTML = `${categoriaConMayorGasto}`;
+    $("monto-mayor-gasto").innerHTML = `-$${montoMayorGasto}`;
+};
+
